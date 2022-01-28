@@ -46,6 +46,22 @@ app.post('/api/notes', (req, res) => {
 
 });
 
+app.delete('/api/notes/:id', function (req, res) {
+  // console.log(req.params.id);
+  for (let i in db) {
+
+    if (db[i].id == req.params.id) {
+      // console.log("match");
+      db.splice (i, 1);
+      fs.writeFile("./db/db.json", JSON.stringify(db, null, 2), (err) => err ? console.error(err) : console.log("success"));
+    }
+    // console.log(db);
+  }
+
+
+  res.send(`Got a DELETE request at /user (${req.body})`)
+})
+
 
 
 app.listen(PORT, () =>
