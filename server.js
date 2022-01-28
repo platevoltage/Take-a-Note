@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const db = require('./db/db.json');
+const fs = require('fs');
 
 const PORT = 3001;
 
@@ -34,6 +35,8 @@ app.post('/api/notes', (req, res) => {
 
   console.info(req.body);
   db.push(req.body);
+
+  fs.writeFile("./db/db.json", JSON.stringify(db, null, 2), (err) => err ? console.error(err) : console.log("success"));
 
  
   console.info(`${req.method} request received`);
