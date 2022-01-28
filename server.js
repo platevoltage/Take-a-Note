@@ -31,6 +31,11 @@ app.post('/api/notes', (req, res) => {
 
   res.json(`${req.method} request received`);
 
+
+  console.info(req.body);
+  db.push(req.body);
+
+ 
   console.info(`${req.method} request received`);
 
 });
