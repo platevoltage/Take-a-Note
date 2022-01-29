@@ -1,10 +1,10 @@
 const express = require('express');
 const path = require('path');
-const db = require('./db/db.json');
 const fs = require('fs');
-
+var db = require('./db/db.json');
 const PORT = process.env.PORT || 3001;
 
+//middleware
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
@@ -19,48 +19,33 @@ app.get('/notes/', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-
-  // res.json(`${req.method} request received`);
-
-  // console.info(`${req.method} request received`);
-
   res.json(db);
-
 });
 
 app.post('/api/notes', (req, res) => {
 
   res.json(`${req.method} request received`);
 
-  // console.log(Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1));
-
-  console.info(req.body);
+  //generates 4 digit uuid
   req.body.id = Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
 
+  //pushes new note to db
   db.push(req.body);
 
+  //writes new db to json
   fs.writeFile("./db/db.json", JSON.stringify(db, null, 2), (err) => err ? console.error(err) : console.log("success"));
-
- 
-  console.info(`${req.method} request received`);
 
 });
 
 app.delete('/api/notes/:id', function (req, res) {
-  // console.log(req.params.id);
-  for (let i in db) {
+  
+  // removes the note with matching id
+  db = db.filter(note => note.id !== req.params.id);
 
-    if (db[i].id == req.params.id) {
-      // console.log("match");
-      db.splice (i, 1);
-      fs.writeFile("./db/db.json", JSON.stringify(db, null, 2), (err) => err ? console.error(err) : console.log("success"));
-    }
-    // console.log(db);
-  }
-
+  fs.writeFile("./db/db.json", JSON.stringify(db, null, 2), (err) => err ? console.error(err) : console.log("success"));
 
   res.send(`Got a DELETE request at /user (${req.body})`)
-})
+});
 
 
 
